@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuários Cadastrados</title>
+</head>
+<body>
+
+    <h1>Usuários Cadastrados</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>E-mail</th>
+            </tr>
+        </thead>
+        <tbody id="tabelaUsuarios">
+
+        </tbody>
+    </table>
+
+    <script>
+        async function buscarUsuarios() {
+
+            const resposta = await fetch("http://localhost:3000/usuarios");
+
+            const usuarios = await resposta.json();
+
+            const tabela = document.getElementById("tabelaUsuarios");
+
+            tabela.innerHTML = "";
+
+            usuarios.forEach(usuario => {
+
+                tabela.innerHTML += `
+                    <tr>
+                        <td>${usuario.nome}</td>
+                        <td>${usuario.email}</td>
+                    </tr>
+                `;
+
+            });
+        }
+
+        buscarUsuarios();
+
+    </script>
+
+    <a href="index.html">
+    cadastrar novo usuario
+</a>
+
+</body>
+</html>

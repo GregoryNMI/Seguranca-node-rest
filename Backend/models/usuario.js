@@ -5,15 +5,30 @@ const usuarioSchema = new mongoose.Schema({
         required: true
     },
 
+
+    telefone: {
+        type: String,
+        required: false,
+        unique: false
+    },
+
     email: {
         type: String,
         required: true,
-        unique: true
     },
-    senha: {
+
+    enderecoweb: {
         type: String,
-        required: true
-    }
+        required: false,
+    },
+
+    experiencia: {
+        type: String,
+        required: true,
+    },
+
+
+   
 });
 
 
