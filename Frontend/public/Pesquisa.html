@@ -1,55 +1,153 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Usuários Cadastrados</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisar Usuários</title>
+    <link rel="stylesheet" href="../css/Pesquisa.css">
 </head>
+
 <body>
 
-    <h1>Usuários Cadastrados</h1>
+<div class="container">
+    <h1>Pesquisar Usuários</h1>
 
-    <table border="1">
+   <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+
+    <input
+        type="text"
+        id="campoPesquisa"
+        placeholder="Digite nome, email ou telefone"
+        style="
+            width:400px;
+            padding:14px 20px;
+            border:none;
+            border-radius:10px;
+            font-size:16px;
+            background:#ececec;
+            color:#333;
+            outline:none;
+            box-shadow:0 0 8px rgba(0,0,0,0.2);
+        "
+    >
+
+    <button
+        onclick="pesquisarUsuario()"
+        style="
+            background:#008cff;
+            color:white;
+            border:none;
+            padding:14px 25px;
+            border-radius:10px;
+            font-size:16px;
+            font-weight:bold;
+            cursor:pointer;
+        ">
+        Pesquisar
+    </button>
+
+    <a
+        href="index.html"
+        style="
+            background:#555;
+            color:white;
+            text-decoration:none;
+            padding:14px 25px;
+            border-radius:10px;
+            font-size:16px;
+            font-weight:bold;
+            display:inline-block;
+        ">
+        ← Voltar para Cadastro
+    </a>
+
+</div>
+
+    <div class="mensagem" id="mensagem"></div>
+
+    <table>
         <thead>
             <tr>
                 <th>Nome</th>
-                <th>E-mail</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Endereço Web</th>
+                <th>Experiência</th>
             </tr>
         </thead>
-        <tbody id="tabelaUsuarios">
 
+        <tbody id="tabelaUsuarios">
         </tbody>
     </table>
 
     <script>
-        async function buscarUsuarios() {
 
-            const resposta = await fetch("http://localhost:3000/usuarios");
+        async function pesquisarUsuario() {
 
-            const usuarios = await resposta.json();
+            try {
 
-            const tabela = document.getElementById("tabelaUsuarios");
+                const termo =
+                    document.getElementById("campoPesquisa").value;
 
-            tabela.innerHTML = "";
+                const resposta =
+                    await fetch(`/pesquisar?termo=${encodeURIComponent(termo)}`);
 
-            usuarios.forEach(usuario => {
+                const usuarios =
+                    await resposta.json();
 
-                tabela.innerHTML += `
-                    <tr>
-                        <td>${usuario.nome}</td>
-                        <td>${usuario.email}</td>
-                    </tr>
-                `;
+                const tabela =
+                    document.getElementById("tabelaUsuarios");
 
-            });
+                const mensagem =
+                    document.getElementById("mensagem");
+
+                tabela.innerHTML = "";
+                mensagem.innerHTML = "";
+
+                if (usuarios.length === 0) {
+
+                    mensagem.innerHTML =
+                        "Nenhum usuário encontrado.";
+
+                    return;
+                }
+
+                usuarios.forEach(usuario => {
+
+                    tabela.innerHTML += `
+                        <tr>
+                            <td>${usuario.nome || ""}</td>
+                            <td>${usuario.email || ""}</td>
+                            <td>${usuario.telefone || ""}</td>
+                            <td>${usuario.enderecoweb || ""}</td>
+                            <td>${usuario.experiencia || ""}</td>
+                        </tr>
+                    `;
+
+                });
+
+            } catch (erro) {
+
+                console.error(erro);
+
+                document.getElementById("mensagem").innerHTML =
+                    "Erro ao pesquisar usuários.";
+
+            }
+
         }
 
-        buscarUsuarios();
+        document
+            .getElementById("campoPesquisa")
+            .addEventListener("keypress", function(event) {
+
+                if (event.key === "Enter") {
+                    pesquisarUsuario();
+                }
+
+            });
 
     </script>
-
-    <a href="index.html">
-    cadastrar novo usuario
-</a>
-
+</div>
 </body>
 </html>

@@ -21,7 +21,7 @@ app.use(express.urlencoded({extended: true}))
 
 app.use(
     express.static(
-        path.join(__dirname, "../frontend/public")
+        path.join(__dirname, "../Frontend/public")
     )
 );
 
@@ -52,12 +52,17 @@ app.post("/salvar", async (req, res) => {
 
         await novoUsuario.save();
 
-        res.send("Usuário cadastrado com sucesso");
+        res.sendFile(path.join(__dirname, '..', 'Frontend', 'public', 'CurriculoCadastrado.html'));
     } catch (erro) {
         console.log(erro);
         res.status(500).send("Erro ao cadastrar");
     }
 });
+
+
+
+
+
 
 
 app.get("/usuarios", async (req, res) => {
@@ -77,6 +82,7 @@ app.get("/usuarios", async (req, res) => {
         });
     }
 });
+
 
 
 app.get("/pesquisar", async (req, res) => {
