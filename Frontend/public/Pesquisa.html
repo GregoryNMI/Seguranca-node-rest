@@ -82,72 +82,76 @@
 
     <script>
 
-        async function pesquisarUsuario() {
+    // evita XSS no front (mesmo conceito do backend)
+    function limparTexto(texto) {
+        return String(texto || "")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+    }
 
-            try {
+    async function pesquisarUsuario() {
 
-                const termo =
-                    document.getElementById("campoPesquisa").value;
+        try {
 
-                const resposta =
-                    await fetch(`/pesquisar?termo=${encodeURIComponent(termo)}`);
+            const termo =
+                document.getElementById("campoPesquisa").value || "";
 
-                const usuarios =
-                    await resposta.json();
+            const resposta =
+                await fetch(`/pesquisar?termo=${encodeURIComponent(termo)}`);
 
-                const tabela =
-                    document.getElementById("tabelaUsuarios");
+            const usuarios =
+                await resposta.json();
 
-                const mensagem =
-                    document.getElementById("mensagem");
+            const tabela =
+                document.getElementById("tabelaUsuarios");
 
-                tabela.innerHTML = "";
-                mensagem.innerHTML = "";
+            const mensagem =
+                document.getElementById("mensagem");
 
-                if (usuarios.length === 0) {
+            tabela.innerText = "";
+            mensagem.innerText = "";
 
-                    mensagem.innerHTML =
-                        "Nenhum usuário encontrado.";
-
-                    return;
-                }
-
-                usuarios.forEach(usuario => {
-
-                    tabela.innerHTML += `
-                        <tr>
-                            <td>${usuario.nome || ""}</td>
-                            <td>${usuario.email || ""}</td>
-                            <td>${usuario.telefone || ""}</td>
-                            <td>${usuario.enderecoweb || ""}</td>
-                            <td>${usuario.experiencia || ""}</td>
-                        </tr>
-                    `;
-
-                });
-
-            } catch (erro) {
-
-                console.error(erro);
-
-                document.getElementById("mensagem").innerHTML =
-                    "Erro ao pesquisar usuários.";
-
+            if (!usuarios || usuarios.length === 0) {
+                mensagem.innerText = "Nenhum usuário encontrado.";
+                return;
             }
 
-        }
+            usuarios.forEach(usuario => {
 
-        document
-            .getElementById("campoPesquisa")
-            .addEventListener("keypress", function(event) {
-
-                if (event.key === "Enter") {
-                    pesquisarUsuario();
-                }
+                tabela.innerText += `
+                    <tr>
+                        <td>${limparTexto(usuario.nome)}</td>
+                        <td>${limparTexto(usuario.email)}</td>
+                        <td>${limparTexto(usuario.telefone)}</td>
+                        <td>${limparTexto(usuario.enderecoweb)}</td>
+                        <td>${limparTexto(usuario.experiencia)}</td>
+                    </tr>
+                `;
 
             });
 
-    </script>
+        } catch (erro) {
+
+            console.error(erro);
+
+            document.getElementById("mensagem").innerText =
+                "Erro ao pesquisar usuários.";
+
+        }
+
+    }
+
+    document
+        .getElementById("campoPesquisa")
+        .addEventListener("keypress", function(event) {
+
+            if (event.key === "Enter") {
+                pesquisarUsuario();
+            }
+
+        });
+
+</script>
 </div>
 </body>
 </html>

@@ -34,17 +34,17 @@
 <script>
     async function buscarUsuarios() {
 
-        const resposta = await fetch("http://localhost:3000/usuarios");
+        const resposta = await fetch("/usuarios");
 
         const usuarios = await resposta.json();
 
         const tabela = document.getElementById("tabelaUsuarios");
 
-        tabela.innerHTML = "";
+        tabela.innerText = "";
 
         usuarios.forEach(usuario => {
 
-            tabela.innerHTML += `
+            tabela.innerText += `
                 <tr>
                     <td>${usuario.nome}</td>
                     <td>${usuario.email}</td>
