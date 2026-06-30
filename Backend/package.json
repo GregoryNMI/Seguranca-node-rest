@@ -3,8 +3,12 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
     "mongodb": "^7.3.0",
     "mongoose": "^9.7.1",
-    "npm": "^11.13.0"
+    "npm": "^11.13.0",
+    "xss": "^1.0.15"
   }
 }
