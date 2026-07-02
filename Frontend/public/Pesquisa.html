@@ -1,157 +1,281 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Pesquisar Usuários</title>
+
     <link rel="stylesheet" href="../css/Pesquisa.css">
+
 </head>
 
 <body>
 
 <div class="container">
+
     <h1>Pesquisar Usuários</h1>
 
-   <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+    <div class="barraPesquisa">
 
-    <input
-        type="text"
-        id="campoPesquisa"
-        placeholder="Digite nome, email ou telefone"
-        style="
-            width:400px;
-            padding:14px 20px;
-            border:none;
-            border-radius:10px;
-            font-size:16px;
-            background:#ececec;
-            color:#333;
-            outline:none;
-            box-shadow:0 0 8px rgba(0,0,0,0.2);
-        "
-    >
+        <input
+            type="text"
+            id="campoPesquisa"
+            placeholder="Digite nome ou email">
 
-    <button
-        onclick="pesquisarUsuario()"
-        style="
-            background:#008cff;
-            color:white;
-            border:none;
-            padding:14px 25px;
-            border-radius:10px;
-            font-size:16px;
-            font-weight:bold;
-            cursor:pointer;
-        ">
-        Pesquisar
-    </button>
+        <button onclick="pesquisarUsuario()">
+            Pesquisar
+        </button>
 
-    <a
-        href="index.html"
-        style="
-            background:#555;
-            color:white;
-            text-decoration:none;
-            padding:14px 25px;
-            border-radius:10px;
-            font-size:16px;
-            font-weight:bold;
-            display:inline-block;
-        ">
-        ← Voltar para Cadastro
-    </a>
+        <a href="index.html" class="btnVoltar">
+            ← Voltar para Cadastro
+        </a>
 
-</div>
+    </div>
 
     <div class="mensagem" id="mensagem"></div>
 
     <table>
+
         <thead>
+
             <tr>
+
                 <th>Nome</th>
                 <th>Email</th>
-                <th>Telefone</th>
-                <th>Endereço Web</th>
-                <th>Experiência</th>
+                <th>Ações</th>
+
             </tr>
+
         </thead>
 
-        <tbody id="tabelaUsuarios">
-        </tbody>
+        <tbody id="tabelaUsuarios"></tbody>
+
     </table>
 
-    <script>
+</div>
 
-    // evita XSS no front (mesmo conceito do backend)
-    function limparTexto(texto) {
-        return String(texto || "")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
-    }
 
-    async function pesquisarUsuario() {
+<div id="modalUsuario" class="modal">
 
-        try {
+    <div class="modal-content">
 
-            const termo =
-                document.getElementById("campoPesquisa").value || "";
+        <span class="fechar" onclick="fecharModal()">&times;</span>
 
-            const resposta =
-                await fetch(`/pesquisar?termo=${encodeURIComponent(termo)}`);
+        <h2>Informações do Candidato</h2>
 
-            const usuarios =
-                await resposta.json();
+        <div class="campo">
 
-            const tabela =
-                document.getElementById("tabelaUsuarios");
+            <label>Nome</label>
 
-            const mensagem =
-                document.getElementById("mensagem");
+            <input
+                type="text"
+                id="modalNome"
+                readonly>
 
-            tabela.innerText = "";
-            mensagem.innerText = "";
+        </div>
 
-            if (!usuarios || usuarios.length === 0) {
-                mensagem.innerText = "Nenhum usuário encontrado.";
-                return;
-            }
+        <div class="campo">
 
-            usuarios.forEach(usuario => {
+            <label>Email</label>
 
-                tabela.innerText += `
-                    <tr>
-                        <td>${limparTexto(usuario.nome)}</td>
-                        <td>${limparTexto(usuario.email)}</td>
-                        <td>${limparTexto(usuario.telefone)}</td>
-                        <td>${limparTexto(usuario.enderecoweb)}</td>
-                        <td>${limparTexto(usuario.experiencia)}</td>
-                    </tr>
-                `;
+            <input
+                type="text"
+                id="modalEmail"
+                readonly>
 
-            });
+        </div>
 
-        } catch (erro) {
+        <div class="campo">
 
-            console.error(erro);
+            <label>Telefone</label>
 
-            document.getElementById("mensagem").innerText =
-                "Erro ao pesquisar usuários.";
+            <input
+                type="text"
+                id="modalTelefone"
+                readonly>
+
+        </div>
+
+        <div class="campo">
+
+            <label>Endereço Web</label>
+
+            <input
+                type="text"
+                id="modalEndereco"
+                readonly>
+
+        </div>
+
+        <div class="campo">
+
+            <label>Experiência</label>
+
+            <textarea
+                id="modalExperiencia"
+                rows="8"
+                readonly></textarea>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let usuariosCache = [];
+
+function limparTexto(texto){
+
+    return String(texto || "")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+
+}
+
+async function pesquisarUsuario(){
+
+    try{
+
+        const termo =
+            document.getElementById("campoPesquisa").value;
+
+        const resposta =
+            await fetch(`/pesquisar?termo=${encodeURIComponent(termo)}`);
+
+        const usuarios =
+            await resposta.json();
+
+        usuariosCache = usuarios;
+
+        const tabela =
+            document.getElementById("tabelaUsuarios");
+
+        const mensagem =
+            document.getElementById("mensagem");
+
+        tabela.innerHTML = "";
+        mensagem.innerHTML = "";
+
+        if(!usuarios.length){
+
+            mensagem.innerHTML =
+                "Nenhum usuário encontrado.";
+
+            return;
 
         }
 
-    }
+        usuarios.forEach((usuario, indice)=>{
 
-    document
-        .getElementById("campoPesquisa")
-        .addEventListener("keypress", function(event) {
+            tabela.innerHTML += `
 
-            if (event.key === "Enter") {
-                pesquisarUsuario();
-            }
+            <tr>
+
+                <td>${limparTexto(usuario.nome)}</td>
+
+                <td>${limparTexto(usuario.email)}</td>
+
+                <td>
+
+                    <button
+                        class="btnDetalhes"
+                        onclick="abrirModal(${indice})">
+
+                        Ver detalhes
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+            `;
 
         });
 
+    }
+
+    catch(erro){
+
+        console.error(erro);
+
+        document.getElementById("mensagem").innerHTML =
+            "Erro ao pesquisar usuários.";
+
+    }
+
+}
+
+function abrirModal(indice){
+
+    const usuario = usuariosCache[indice];
+
+    if(!usuario){
+        return;
+    }
+
+    document.getElementById("modalNome").value =
+        usuario.nome || "";
+
+    document.getElementById("modalEmail").value =
+        usuario.email || "";
+
+    document.getElementById("modalTelefone").value =
+        usuario.telefone || "";
+
+    document.getElementById("modalEndereco").value =
+        usuario.enderecoweb || "";
+
+    document.getElementById("modalExperiencia").value =
+        usuario.experiencia || "";
+
+    document.getElementById("modalUsuario").style.display =
+        "flex";
+
+}
+
+function fecharModal(){
+
+    document.getElementById("modalUsuario").style.display =
+        "none";
+
+}
+
+window.onclick = function(event){
+
+    const modal =
+        document.getElementById("modalUsuario");
+
+    if(event.target === modal){
+
+        fecharModal();
+
+    }
+
+}
+
+document
+.getElementById("campoPesquisa")
+.addEventListener("keypress",function(event){
+
+    if(event.key==="Enter"){
+
+        pesquisarUsuario();
+
+    }
+
+});
+
+pesquisarUsuario();
+
 </script>
-</div>
+
 </body>
+
 </html>
+

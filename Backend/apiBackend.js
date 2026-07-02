@@ -87,7 +87,12 @@ app.get("/usuarios", async (req, res) => {
 
 
 
+
 app.get("/pesquisar", async (req, res) => {
+
+
+    
+
 
     try {
 

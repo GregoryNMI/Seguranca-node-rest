@@ -1,4 +1,5 @@
-/* RESET */
+
+/* ===== Reset ===== */
 
 *{
     margin:0;
@@ -7,125 +8,150 @@
     font-family:Arial, Helvetica, sans-serif;
 }
 
-/* FUNDO */
+/* ===== Corpo ===== */
 
 body{
 
-    background-image:
-        linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)),
-        url("../assets/sapiras.gif");
-
-    background-repeat:repeat;
-    background-size:350px;
-
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    background-image: url("../assets/sapiras.gif");
+    min-height:100vh;
     display:flex;
     justify-content:center;
-    align-items:center;
-
-    min-height:100vh;
-
+    align-items:flex-start;
     padding:40px;
 
 }
 
-/* PAINEL */
+/* ===== Container ===== */
 
 .container{
 
-    width:1200px;
-    max-width:95%;
+    width:95%;
+    max-width:1200px;
 
-    background:rgba(70,70,70,.85);
-
-    backdrop-filter:blur(8px);
-
-    border-radius:18px;
+    background:white;
 
     padding:35px;
 
-    box-shadow:0 15px 35px rgba(0,0,0,.45);
+    border-radius:18px;
 
-    color:white;
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
 
 }
 
-/* TÍTULO */
+/* ===== Título ===== */
 
 h1{
 
     text-align:center;
-
+    color:#1e293b;
     margin-bottom:30px;
-
-    font-size:36px;
 
 }
 
-/* ÁREA DE PESQUISA */
+/* ===== Barra de pesquisa ===== */
 
-.pesquisa{
+.barraPesquisa{
+
     display:flex;
-    align-items:center;
     gap:15px;
+    align-items:center;
+    flex-wrap:wrap;
     margin-bottom:30px;
+
 }
 
-.pesquisa input{
+.barraPesquisa input{
 
     flex:1;
+    min-width:280px;
 
-    background:#ececec;
-
-    color:#333;
-
-    padding:15px 20px;
+    padding:14px 18px;
 
     border:none;
 
-    border-radius:12px;
+    background:#f1f5f9;
 
-    font-size:17px;
-
-}
-
-.pesquisa input:focus{
-
-    outline:none;
-
-    box-shadow:0 0 10px #008cff;
-
-}
-
-.pesquisa button{
-
-    background:#008cff;
-
-    color:white;
-
-    padding:15px 28px;
-
-    border:none;
-
-    border-radius:12px;
+    border-radius:10px;
 
     font-size:16px;
 
-    font-weight:bold;
+    outline:none;
+
+    transition:.3s;
+
+}
+
+.barraPesquisa input:focus{
+
+    box-shadow:0 0 10px rgba(0,140,255,.4);
+
+}
+
+/* ===== Botões ===== */
+
+button{
+
+    background:#0d6efd;
+
+    color:white;
+
+    border:none;
+
+    padding:14px 24px;
+
+    border-radius:10px;
 
     cursor:pointer;
 
-    transition:.25s;
+    font-weight:bold;
+
+    transition:.3s;
 
 }
 
-.pesquisa button:hover{
+button:hover{
 
-    background:#006fd1;
-
+    background:#0b5ed7;
     transform:translateY(-2px);
 
 }
-/* TABELA */
+
+.btnVoltar{
+
+    text-decoration:none;
+
+    background:#64748b;
+
+    color:white;
+
+    padding:14px 24px;
+
+    border-radius:10px;
+
+    transition:.3s;
+
+}
+
+.btnVoltar:hover{
+
+    background:#475569;
+
+}
+
+/* ===== Mensagem ===== */
+
+.mensagem{
+
+    margin-bottom:20px;
+
+    color:#dc2626;
+
+    font-weight:bold;
+
+}
+
+/* ===== Tabela ===== */
 
 table{
 
@@ -137,31 +163,23 @@ table{
 
     border-radius:12px;
 
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+
 }
 
 thead{
 
-    background:#008cff;
-
-}
-
-th{
-
-    padding:16px;
+    background:#2563eb;
 
     color:white;
 
-    text-align:left;
-
 }
 
-td{
+thead th{
 
-    padding:15px;
+    padding:18px;
 
-    color:#f2f2f2;
-
-    border-bottom:1px solid rgba(255,255,255,.15);
+    text-align:left;
 
 }
 
@@ -173,35 +191,222 @@ tbody tr{
 
 tbody tr:nth-child(even){
 
-    background:rgba(255,255,255,.05);
+    background:#f8fafc;
 
 }
 
 tbody tr:hover{
 
-    background:rgba(0,140,255,.2);
+    background:#dbeafe;
 
 }
 
-/* MENSAGEM */
+tbody td{
 
-.mensagem{
+    padding:18px;
 
-    margin-bottom:20px;
+    border-bottom:1px solid #e5e7eb;
 
-    color:#ffb5b5;
+}
+
+/* ===== Botão detalhes ===== */
+
+.btnDetalhes{
+
+    background:#16a34a;
+
+    padding:10px 18px;
+
+    border-radius:8px;
+
+}
+
+.btnDetalhes:hover{
+
+    background:#15803d;
+
+}
+
+/* ===== Modal ===== */
+
+.modal{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.55);
+
+    justify-content:center;
+
+    align-items:center;
+
+    animation:fade .25s;
+
+    z-index:999;
+
+}
+
+@keyframes fade{
+
+    from{
+
+        opacity:0;
+
+    }
+
+    to{
+
+        opacity:1;
+
+    }
+
+}
+
+.modal-content{
+
+    width:700px;
+
+    max-width:92%;
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:35px;
+
+    position:relative;
+
+    animation:subir .25s ease;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+
+}
+
+@keyframes subir{
+
+    from{
+
+        transform:translateY(40px);
+
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:translateY(0);
+
+        opacity:1;
+
+    }
+
+}
+
+.modal-content h2{
+
+    color:#1e293b;
+
+    margin-bottom:25px;
+
+}
+
+/* ===== Fechar ===== */
+
+.fechar{
+
+    position:absolute;
+
+    top:18px;
+
+    right:25px;
+
+    font-size:34px;
+
+    cursor:pointer;
+
+    color:#888;
+
+}
+
+.fechar:hover{
+
+    color:red;
+
+}
+
+/* ===== Campos ===== */
+
+.campo{
+
+    margin-bottom:18px;
+
+}
+
+.campo label{
+
+    display:block;
+
+    margin-bottom:8px;
 
     font-weight:bold;
 
+    color:#334155;
+
 }
 
-/* RESPONSIVO */
+.campo input{
 
-@media(max-width:900px){
+    width:100%;
 
-    .pesquisa{
+    padding:14px;
+
+    border:1px solid #d1d5db;
+
+    border-radius:10px;
+
+    background:#f8fafc;
+
+    font-size:15px;
+
+}
+
+.campo textarea{
+
+    width:100%;
+
+    padding:14px;
+
+    border:1px solid #d1d5db;
+
+    border-radius:10px;
+
+    resize:none;
+
+    background:#f8fafc;
+
+    font-size:15px;
+
+}
+
+/* ===== Responsividade ===== */
+
+@media(max-width:768px){
+
+    .barraPesquisa{
 
         flex-direction:column;
+        align-items:stretch;
+
+    }
+
+    button,
+    .btnVoltar{
+
+        width:100%;
+        text-align:center;
 
     }
 
@@ -211,4 +416,33 @@ tbody tr:hover{
 
     }
 
+    thead{
+
+        display:none;
+
+    }
+
+    tbody tr{
+
+        display:block;
+
+        margin-bottom:20px;
+
+        border:1px solid #ddd;
+
+        border-radius:12px;
+
+    }
+
+    tbody td{
+
+        display:flex;
+
+        justify-content:space-between;
+
+        align-items:center;
+
+    }
+
 }
+```
